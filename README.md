@@ -2,8 +2,6 @@
 
 A retrieval-augmented generation (RAG) pipeline built from first principles in Python, without a vector database or RAG framework. It chunks a document, retrieves the most relevant chunks with **hybrid search** (semantic embeddings + BM25 keyword search, merged with Reciprocal Rank Fusion), and asks **Claude** to answer using only those chunks.
 
-The repository also includes a small **tool-use agent** that shows how an LLM can call local Python functions.
-
 ## How it works
 
 ```
@@ -38,7 +36,6 @@ question ──▶ Retriever ── Reciprocal Rank Fusion ──▶ top-k chunk
 | `semantic_index.py` | Wraps `VectorIndex` so it takes text and embeds it automatically |
 | `retriever.py` | Hybrid retriever that fuses any number of indexes with RRF |
 | `embeddings_demo.py` | Minimal example of creating one embedding |
-| `expense_agent.py` | Tool-use agent: Claude calls local functions to log and total expenses |
 | `report.md` | Sample knowledge base: a fictional company annual report |
 
 ## Getting started
@@ -70,26 +67,12 @@ Questions worth trying, since they show where each retrieval method is strong:
 - `How did the company improve reliability?` (meaning-based, where embeddings help)
 - `What was the revenue in the fourth quarter?`
 
-### Run the expense agent
-
-```bash
-python expense_agent.py
-```
-
-```
-You: I spent 120 on lunch today
-You: How much did I spend on food this month?
-```
-
-Expenses are saved to `data/expenses.json`.
-
 ## What I learned
 
 - Why chunking strategy matters: section-based chunks keep each piece on a single topic.
 - The difference between `document` and `query` embeddings, and why batching embedding calls matters.
 - Where semantic search and keyword search each fail, and how Reciprocal Rank Fusion combines them without score normalization.
 - Grounding an LLM's answer in retrieved context to reduce hallucination.
-- The tool-use loop: tool schemas, `tool_use` / `tool_result` messages, and error handling.
 
 ## Possible next steps
 
